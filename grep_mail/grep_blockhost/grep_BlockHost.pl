@@ -63,16 +63,30 @@ map { delete $watched{$_} } keys %blocked;
 print "Blocked: \n";
 map { 
    my $c = $gi->country_name_by_addr($_);
-   print $_ . "\t" . $blocked{$_} . "\t" . $c . "\n" 
+   my $bl = &check_rbl($_);
+   print $_ . "\t" . $blocked{$_} . "\t" . $c . "\t" . $bl . "\n" 
 } 
 sort { $blocked{$a} <=> $blocked{$b} } keys %blocked; 
 
 print "Watched: \n";
 map { 
    my $c = $gi->country_name_by_addr($_);
-   print $_ . "\t" . $watched{$_} . "\t" . $c . "\n" 
+   my $bl = &check_rbl($_);
+   print $_ . "\t" . $watched{$_} . "\t" . $c . "\t" . $bl . "\n" 
 } 
 sort { $watched{$a} <=> $watched{$b} } keys %watched; 
 
 
+sub check_rbl {
+	#rblcheck 218.29.115.152 |grep -v "not listed"
+    my $o = '';
+    my $ip = shift;
+    my $out = `/usr/bin/rblcheck $ip |grep -v "not listed"`; 
+    if ($out !~ m/^\s*$/) {
+        my @o = split /\n/, $out;
+	map { s/.+\s([a-zA-Z0-9.]+)$/$1/; } @o;
+	$o = join " ", @o;
+    } 
+    return $o;
+}
 
