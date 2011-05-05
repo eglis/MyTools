@@ -6,9 +6,13 @@
 # Petit script pour numéroter le /etc/sysconfig/iptables 
 # afin de savoir quel règle nous bloque. 
 # 
-# Bête et stupide search/replace de notre log prefix
-# Ça pourrait être améliorer facilement pour attrapper le
+# Un search & replace bête et stupide. 
+#
+# Le script pourrait être améliorer facilement pour attrapper le
 # ...  --log-prefix "(.+?)" et y concaténer un Id unique.
+# 
+# Il pourrait aussi jourer directement sur le bon fichier
+# mais je préfère travailler sur une copie.
 #
 
 use strict;
