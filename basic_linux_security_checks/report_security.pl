@@ -634,4 +634,99 @@ exit 0;
 # Good peice of work here but not urgent.
 # 
 
+# 2.5.7 Uncommon Network Protocols
+
+# 2.5.7.1 Disable Support for DCCP
+#
+# add to /etc/modprobe.conf
+# install dccp /bin/true
+
+# 2.5.7.2 Disable Support for SCTP
+#
+# add to /etc/modprobe.conf
+# install sctp /bin/true
+#
+# 2.5.7.3 Disable Support for RDS
+#
+# add to /etc/modprobe.conf
+# install rds /bin/true
+#
+# 2.5.7.4 Disable Support for TIPC
+#
+# add to /etc/modprobe.conf
+# install tipc /bin/true
+#
+
+# 2.5.8 IPsec
+# ... use  openswan ( or openvpn )
+
+# 2.6 Logging and Auditing
+#
+# 2.6.1.1 Configure Syslog
+#
+# auth,user.*								/var/log/messages
+# mail.*								/var/log/maillog
+# cron.*								/var/log/cron
+# kern.*								/var/log/kern.log
+# daemon.*								/var/log/daemon.log
+# syslog.*								/var/log/syslog
+# lpr,news,uucp,local0,local1,local2,local3,local4,local5,local6.*	/var/log/unused.log
+# local7.*								/var/log/boot.log
+#
+# touch LOGFILE
+# chown root:root LOGFILE
+# chmod 0600 LOGFILE
+#
+
+# 2.6.1.1.3 Send Logs to a Remote Loghost
+#
+# /etc/syslog.conf
+# *.*			@loghost.example.com
+# 
+# If used *.* you might consider using rsyslog!
+# encrypted logs over the wire
+
+
+# 2.6.1.3 Logrotate
+#
+# make suer all logs are rotated
+#
+# and edit /etc/logrotate.d/syslog
+#
+
+# 2.6.1.4 Logwatch
+#
+# Make sure the cron is working and that root@localhost reach a humain
+
+
+# 2.6.2 Use auditd !
+#
+# need to learn it before i can code it!
+
+
+
+
+
+
+
+
+
+
+
+
+
+# chkconfig ! unused services
+#
+# 3.1 Disable All Unneeded Services at Boot Time
+#
+# chkconfig --list |grep :on
+# 
+
+
+
+
+
+
+
+
 
