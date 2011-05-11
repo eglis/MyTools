@@ -8,9 +8,6 @@
 #
 #
 
-print "All good until i finish my script\n";
-exit 0;
-
 
 # 2.1.1.1 Disk Partitionning
 #
@@ -39,8 +36,43 @@ exit 0;
 #   /var/log/audit
 #
 
+&check_partitions();
+sub check_partitions() {
+
+    my $df = `/bin/df |/usr/bin/awk '{print \$6}'`;
+    my %nsa_parts = (
+	    '/' => '0',
+	    '/boot' => '0',
+	    '/home' => '0',
+	    '/tmp' => '0',
+	    '/var' => '0',
+	    '/var/log' => '0',
+	    '/var/log/audit' => '0'
+    );
+
+    foreach (split /\n/, $df) {
+        if (exists $nsa_parts{$_}) {
+            $nsa_parts{$_} = 1;
+	}
+    }
+
+    # / and /boot are always seperate from default install.
+    foreach (sort keys %nsa_parts) {
+        print "Should consider using a $_ partition\n" if $nsa_parts{$_} == 0;
+    }
+    
+}
+
+
 # 2.1.1.2 Boot Loader config
 # Check that grub has a password
+
+&check_for_grub_password();
+sub check_for_grub_password() {
+        print "You might consider securing GRUB with a password\n" 
+        	if `/bin/grep -c '^password --md5' /etc/grub.conf` == 0;
+}
+
 
 # 2.1.1.6
 # Check Firewall=on, selinux=on and kdump=off
@@ -54,6 +86,20 @@ exit 0;
 # enforcing=0
 #
 # /usr/sbin/sestatus
+
+&check_if_iptables_on();
+sub check_if_iptables_on() {
+
+    # check default run level is 3 or 5 
+    # grep 'id:[0-6]:initdefault:' /etc/inittab | awk -F: '( $2 == "3" || $2 == "5" ) {print $2}'
+
+    my $ipt_status = `/sbin/chkconfig --list |/bin/grep iptables |/bin/awk {'print \$5 " " \$6 " " \$7'}`;
+    chomp $ipt_status;
+    print "You should consider turning iptables On and start using it.\n"
+    if $ipt_status =~ m/3:on 4:on 5:on/;
+}
+
+
 
 # 2.1.3.1
 # AIDE:
