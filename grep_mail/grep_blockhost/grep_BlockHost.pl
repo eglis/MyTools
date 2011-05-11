@@ -59,6 +59,14 @@ foreach (@mailfile) {           # on ouvre chauqe fichiers un par un...
 map { $blocked{$_} += $watched{$_} } keys %blocked;
 map { delete $watched{$_} } keys %blocked;
 
+print "Watched: \n";
+map { 
+   my $c = $gi->country_name_by_addr($_);
+   my $bl = &check_rbl($_);
+   print $_ . "\t" . $watched{$_} . "\t" . $c . "\t" . $bl . "\n" 
+} 
+sort { $watched{$a} <=> $watched{$b} } keys %watched; 
+
 # print blocked
 print "Blocked: \n";
 map { 
@@ -67,14 +75,6 @@ map {
    print $_ . "\t" . $blocked{$_} . "\t" . $c . "\t" . $bl . "\n" 
 } 
 sort { $blocked{$a} <=> $blocked{$b} } keys %blocked; 
-
-print "Watched: \n";
-map { 
-   my $c = $gi->country_name_by_addr($_);
-   my $bl = &check_rbl($_);
-   print $_ . "\t" . $watched{$_} . "\t" . $c . "\t" . $bl . "\n" 
-} 
-sort { $watched{$a} <=> $watched{$b} } keys %watched; 
 
 
 sub check_rbl {
